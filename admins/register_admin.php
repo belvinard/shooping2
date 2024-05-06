@@ -15,21 +15,23 @@ function generateToken() {
     return bin2hex(random_bytes(32)); // Generates a secure random token
 }
 
-
 $errorMessage = [];
 
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $errorMessage[] = "CSRF token mismatch.";
     } else {
-        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        // $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-
-        $pass = $_POST['pass'];
-        $cpass = $_POST['cpass'];
+        
+        $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $pass = trim(filter_input(INPUT_POST, 'pass', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $cpass = trim(filter_input(INPUT_POST, 'cpass', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
         // Add regex validation for password
-        if (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+}{:;?]{8,12}$/', $pass)) {
+        /*if (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+}{:;?]{8,12}$/', $pass)) {
+            $errorMessage[] = 'Password must be between 8 and 12 characters long and can contain letters, numbers, and special characters.';
+        }*/
+
+        if (!preg_match('/\d/', $pass)) {
             $errorMessage[] = 'Password must be between 8 and 12 characters long and can contain letters, numbers, and special characters.';
         }
 
@@ -45,7 +47,7 @@ if (isset($_POST['submit'])) {
             $stmt->execute([$name]);
 
             if ($stmt->rowCount() > 0) {
-                $errorMessage[] = 'Username already exists.';
+                $errorMessage[] = 'Admin already exists.';
             } else {
                 $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
                 // $stmt = $conn->prepare("INSERT INTO admins (name, password) VALUES (?, ?)");
@@ -54,7 +56,7 @@ if (isset($_POST['submit'])) {
                 $stmt->execute([$name, $hashed_password, $token]);
                 // $stmt->execute([$name, $hashed_password]);
 
-                $errorMessage[] = 'User registered successfully!';
+                $errorMessage[] = 'Admin registered successfully!';
             }
         }
     }
@@ -75,14 +77,31 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
-    <?php foreach ($errorMessage as $message): ?>
-        <p><?php echo $message; ?></p>
-    <?php endforeach; ?>
+
+<!-- Display error message -->
+    <?php
+        include '../component/admin_header.php';
+        
+        if (!empty($errorMessage)) {
+            foreach ($errorMessage as $error) {
+                echo '
+                <div class="message">
+                    <span>' . $error . '</span>
+                    <i class="fas fa-times" onclick="removeErrorMessage(this);"></i>
+                </div>';
+            }
+        }
+        echo "<script>
+        function removeErrorMessage(element){
+            element.parentElement.remove();
+        }
+        </script>"
+    ?>
 
     <!-- Register admin section starts -->
     <section class="form_container">
 
-        <form action="" method="post">
+        <form action="" method="post" autocomplete="off">
             <h3>register new</h3>
             <input type="text" name="name" required placeholder="enter your username" maxlength="20" class="box" autocomplete="off">
             <div style="position: relative;">

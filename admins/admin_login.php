@@ -45,6 +45,7 @@ if (isset($_COOKIE['remember_me'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+    $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
     $pass = trim(filter_input(INPUT_POST, 'pass', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
     
     $rememberMe = isset($_POST['remember_me']); // Check if "Remember Me" is checked
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: dashboard.php");
             exit();
         } else {
-            $errorMessage[] = 'Invalid username or password.';
+            $errorMessage[] = 'Invalid username or password or email.';
         }
     }
 }
@@ -118,9 +119,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             <input type="text" name="name" required placeholder="enter your username" maxlength="20" class="box" autocomplete="off">
             <!-- <input type="password" name="pass" required placeholder="enter your password" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')" autocomplete="off"> -->
-            <div style="position: relative;">
+            <input type="email" name="email" required placeholder="enter your email" maxlength="50" class="box" oninput="this.value = this.value.replace(/\s/g, '')" autocomplete="off">
+            <!--<div style="position: relative;">
                 <input type="password" name="pass" required placeholder="enter your password" maxlength="20" class="box password-field" oninput="this.value = this.value.replace(/\s/g, '')" autocomplete="off">
                 <span class="eye-icon image" onclick="togglePasswordVisibility(this)"></span>
+            </div>-->
+
+            <div style="position: relative;">
+                <input type="password" id="password" name="pass" required placeholder="enter your password" maxlength="20" class="box password-field" oninput="checkPasswordStrength(this.value)" autocomplete="off" onfocus="showProgressBar()">
+                <span class="eye-icon image" onclick="togglePasswordVisibility(this)"></span>
+            </div>
+            <div class="progress hidden"> <!-- Initially hidden -->
+                <div id="password-strength-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
 
             <div class="remember-container">
@@ -134,16 +144,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     </section>
 
-    <script>
-    function togglePasswordVisibility(icon) {
-        let passwordField = icon.previousElementSibling;
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
+        <script>
+        function togglePasswordVisibility(icon) {
+            let passwordField = icon.previousElementSibling;
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+
+        function showProgressBar() {
+            var progress = document.querySelector('.progress');
+            progress.classList.remove('hidden');
+        }
+
+    function checkPasswordStrength(password) {
+        var strength = 0;
+        var progress = document.getElementById('password-strength-bar');
+
+        // Add points for length
+        strength += password.length * 2;
+
+        // Check for special characters
+        var specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        if (specialChars.test(password)) {
+            strength += 5;
+        }
+
+        // Check for uppercase and lowercase letters
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+            strength += 20;
+        }
+
+        // Check for numbers
+        if (/\d/.test(password)) {
+            strength += 20;
+        }
+
+        // Check if password matches the regex pattern
+        if (/^[a-zA-Z0-9!@#$%^&*()_+}{:;?]{8}$/.test(password)) {
+            // Password meets the requirements, set progress to 100%
+            progress.style.width = '100%';
+            progress.classList.remove('bg-danger', 'bg-warning');
+            progress.classList.add('bg-success');
         } else {
-            passwordField.type = "password";
+            // Password does not meet the requirements, set progress based on strength
+            progress.style.width = strength + '%';
+            // Change color based on strength
+            if (strength < 30) {
+                progress.classList.remove('bg-success', 'bg-warning');
+                progress.classList.add('bg-danger');
+            } else if (strength < 60) {
+                progress.classList.remove('bg-danger', 'bg-success');
+                progress.classList.add('bg-warning');
+            } else { // Adjusted threshold for bg-success
+                progress.classList.remove('bg-danger', 'bg-warning');
+                progress.classList.add('bg-success');
+            }
         }
     }
-</script>
+    </script>
     <!-- custom js file link -->
     <script src="../js/admin_js.js"></script>
 </body>

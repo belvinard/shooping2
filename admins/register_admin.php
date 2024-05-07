@@ -137,58 +137,60 @@
             progress.classList.remove('hidden');
         }
 
-    function checkPasswordStrength(password) {
-        var strength = 0;
-        var progress = document.getElementById('password-strength-bar');
+        function checkPasswordStrength(password) {
+            var strength = 0;
+            var progress = document.getElementById('password-strength-bar');
 
-        // Add points for length
-        strength += password.length * 2;
+            // Add points for length
+            strength += password.length * 2;
 
-        // Check for special characters
-        var specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-        if (specialChars.test(password)) {
-            strength += 5;
-        }
+            // Check for special characters
+            var specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+            if (specialChars.test(password)) {
+                strength += 5;
+            }
 
-        // Check for uppercase and lowercase letters
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
-            strength += 20;
-        }
+            // Check for uppercase and lowercase letters
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+                strength += 20;
+            }
 
-        // Check for numbers
-        if (/\d/.test(password)) {
-            strength += 20;
-        }
+            // Check for numbers
+            if (/\d/.test(password)) {
+                strength += 20;
+            }
 
-        // Check if password matches the regex pattern
-        if (/^[a-zA-Z0-9!@#$%^&*()_+}{:;?]{8}$/.test(password)) {
-            // Password meets the requirements, set progress to 100%
-            progress.style.width = '100%';
-            progress.classList.remove('bg-danger', 'bg-warning');
-            progress.classList.add('bg-success');
-        } else {
-            // Password does not meet the requirements, set progress based on strength
-            progress.style.width = strength + '%';
-            // Change color based on strength
-            if (strength < 30) {
-                progress.classList.remove('bg-success', 'bg-warning');
-                progress.classList.add('bg-danger');
-            } else if (strength < 60) {
-                progress.classList.remove('bg-danger', 'bg-success');
-                progress.classList.add('bg-warning');
-            } else { // Adjusted threshold for bg-success
+            // Check if password matches the regex pattern
+            if (/^[a-zA-Z0-9!@#$%^&*()_+}{:;?]{8}$/.test(password)) {
+                // Password meets the requirements, set progress to 100%
+                progress.style.width = '100%';
                 progress.classList.remove('bg-danger', 'bg-warning');
                 progress.classList.add('bg-success');
+            } else {
+                // Password does not meet the requirements, set progress based on strength
+                progress.style.width = strength + '%';
+                // Change color based on strength
+                if (strength < 30) {
+                    progress.classList.remove('bg-success', 'bg-warning');
+                    progress.classList.add('bg-danger');
+                } else if (strength < 60) {
+                    progress.classList.remove('bg-danger', 'bg-success');
+                    progress.classList.add('bg-warning');
+                } else { // Adjusted threshold for bg-success
+                    progress.classList.remove('bg-danger', 'bg-warning');
+                    progress.classList.add('bg-success');
+                }
             }
         }
-    }
+
+    
     </script>
 
     <!-- custom jQuery link -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
     <!-- custom js file link -->
-    <!-- <script src="js/admin_js.js"></script> -->
+    <script src="../js/admin.js"></script>
     <!-- <script src="../js/profile_js.js"></script> -->
 
 </body>

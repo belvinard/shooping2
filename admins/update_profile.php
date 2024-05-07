@@ -6,8 +6,8 @@ session_start();
 
 // Check if admin is logged in
 if (!isset($_SESSION['admin_id'])) {
-    // header('location:admin_login.php');
-    // exit;
+    header('location:admin_login.php');
+    exit;
 }
 
 // Get the admin ID from the session
@@ -197,7 +197,7 @@ function togglePasswordVisibility(icon) {
     </script>
 
     <!-- custom js file link -->
-    <script src="../js/admin_script.js"></script>
+    <script src="../js/admin.js"></script>
 
 
 </body>

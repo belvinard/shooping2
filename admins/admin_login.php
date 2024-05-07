@@ -1,7 +1,10 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include '../component/connection.php';
+include '../component/connection.php'; // Include database connection
+
+include '../component/authentication.php'; // Include authentication functions
+
 session_start();
 
 $errorMessage = []; // Initialize an empty array for error messages
@@ -47,6 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = trim(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
     $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
     $pass = trim(filter_input(INPUT_POST, 'pass', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+    if (authenticateUser($name, $pass)) {
+        header('Location: dashboard.php'); // Redirect to dashboard upon successful login
+        exit;
+    } else {
+        $errorMessage = "Invalid username or password"; // Display error message for failed login
+    }
     
     $rememberMe = isset($_POST['remember_me']); // Check if "Remember Me" is checked
 

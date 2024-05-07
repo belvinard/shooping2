@@ -629,6 +629,48 @@ section{
 
 /* =============================================== update products style ends ===============================================  */
 
+/* =============================================== placed style ends ===============================================  */
+.placed-orders .box-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 33rem);
+    justify-content: center;
+    align-items: flex-start;
+    gap:1.5rem;
+}
+
+.placed-orders .box-container .box{
+    background-color: var(--white);
+    box-shadow: var(--box-shadow);
+    border:var(--border);
+    border-radius: .5rem;
+    padding: 2rem;
+    padding-top: 1rem;
+}
+
+.placed-orders .box-container .box p{
+    line-height: 1.5;
+    font-size: 2rem;
+    color:var(--light-color);
+    margin:1rem 0;
+}
+
+.placed-orders .box-container .box p span{
+    color:var(--main-color);
+}
+
+.placed-orders .box-container .select{
+    margin-bottom: .5rem;
+    width: 100%;
+    background-color: var(--light-bg);
+    padding:1rem;
+    font-size: 1.8rem;
+    color:var(--black);
+    border-radius: .5rem;
+    border:var(--border);
+}
+
+/* =============================================== placed style ends ===============================================  */
+
 
 /* media queries */
 @media only screen and (max-width: 991px){
@@ -686,5 +728,9 @@ section{
 
     .option-btn,.delete-btn{
         width: calc(100% - 5rem);
+    }
+
+    .placed-orders .box-container{
+        grid-template-columns: 1fr;
     }
 }

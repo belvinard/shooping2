@@ -1,7 +1,21 @@
 <?php
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
-    include '../component/connection.php';
+    include '../component/connection.php'; // Include database connection
+
+    include '../component/authentication.php'; // Include authentication functions
+
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+        header('Location: admin_login.php'); // Redirect to login page if not logged in
+        exit;
+    }
+
+    // Check if user is an administrator
+    if (!isAdmin()) {
+        echo "You are not authorized to access this page."; // Display error message for non-admin users
+        exit;
+    }
     session_start();
 
     $errorMessage = []; // Initialize an empty array for error messages

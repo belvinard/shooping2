@@ -467,6 +467,6 @@
     <!-- custom jQuery link -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- custom js file link -->
-    <script src="../js/admin_js.js"></script>
+    <script src="../js/admin.js"></script>
 </body>
 </html>
